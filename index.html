@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👑 Тест для Натули 👑</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+    :root {
+      --pink-deep:    #c2185b;
+      --pink-mid:     #e91e8c;
+      --pink-light:   #f8bbd0;
+      --pink-pale:    #fce4ec;
+      --gold:         #d4a017;
+      --gold-light:   #f5d76e;
+      --gold-shine:   #fff8e1;
+      --white:        #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fce4ec 0%, #fff8e1 40%, #fce4ec 70%, #fff8e1 100%);
+      background-size: 400% 400%;
+      animation: bgShift 12s ease infinite;
+      font-family: 'Lato', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    @keyframes bgShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ── floating sparkles ── */
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .sparkle {
+      position: absolute;
+      font-size: 1.4rem;
+      opacity: 0;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0;   transform: translateY(0)   rotate(0deg);   }
+      10%  { opacity: .9; }
+      90%  { opacity: .6; }
+      100% { opacity: 0;   transform: translateY(-110vh) rotate(360deg); }
+    }
+
+    /* ── card ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      box-shadow:
+        0 0 0 2px var(--gold-light),
+        0 20px 60px rgba(194,24,91,.18),
+        0 4px 20px rgba(212,160,23,.22);
+      max-width: 680px;
+      width: 100%;
+      padding: 48px 44px 44px;
+      animation: cardIn .7s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(40px) scale(.96); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ── crown decoration ── */
+    .crown-row {
+      text-align: center;
+      font-size: 2.8rem;
+      letter-spacing: .3rem;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    /* ── headings ── */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      text-align: center;
+      background: linear-gradient(90deg, var(--pink-deep), var(--gold), var(--pink-mid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--pink-deep);
+      font-size: .95rem;
+      font-style: italic;
+      letter-spacing: .06em;
+      margin-bottom: 36px;
+      opacity: .8;
+    }
+
+    /* ── progress bar ── */
+    .progress-wrap {
+      background: var(--pink-pale);
+      border-radius: 99px;
+      height: 8px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--pink-mid), var(--gold-light));
+      transition: width .5s cubic-bezier(.22,1,.36,1);
+    }
+
+    /* ── question ── */
+    .question-block { display: none; animation: fadeSlide .45s ease both; }
+    .question-block.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(30px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .q-number {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .q-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.05rem, 3vw, 1.25rem);
+      color: #3a0025;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* ── options ── */
+    .options { display: flex; flex-direction: column; gap: 12px; }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 2px solid var(--pink-light);
+      background: var(--white);
+      cursor: pointer;
+      transition: all .22s ease;
+      font-size: .97rem;
+      color: #4a0030;
+      line-height: 1.4;
+      text-align: left;
+    }
+    .option:hover {
+      border-color: var(--pink-mid);
+      background: var(--pink-pale);
+      transform: translateX(6px);
+      box-shadow: 0 4px 16px rgba(233,30,140,.15);
+    }
+    .option-letter {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink-light), var(--gold-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--pink-deep);
+    }
+    .option:hover .option-letter {
+      background: linear-gradient(135deg, var(--pink-mid), var(--gold));
+      color: var(--white);
+    }
+
+    /* ── result ── */
+    #result {
+      display: none;
+      text-align: center;
+      animation: fadeSlide .5s ease both;
+    }
+    .result-emoji {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      animation: bounce 1s ease infinite alternate;
+    }
+    @keyframes bounce {
+      from { transform: translateY(0) scale(1); }
+      to   { transform: translateY(-10px) scale(1.08); }
+    }
+    .result-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 5vw, 2.1rem);
+      background: linear-gradient(90deg, var(--pink-deep), var(--gold), var(--pink-mid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    .result-text {
+      font-size: 1.05rem;
+      color: #5a0038;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 32px;
+      font-style: italic;
+    }
+    .result-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--pink-mid), var(--gold));
+      color: var(--white);
+      font-weight: 700;
+      letter-spacing: .1em;
+      font-size: .9rem;
+      padding: 10px 26px;
+      border-radius: 99px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 18px rgba(233,30,140,.35);
+    }
+
+    /* ── buttons ── */
+    .btn-restart {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 34px;
+      border-radius: 99px;
+      border: none;
+      background: linear-gradient(90deg, var(--pink-mid), var(--gold-light));
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .05em;
+      box-shadow: 0 6px 24px rgba(233,30,140,.3);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-restart:hover {
+      transform: scale(1.06);
+      box-shadow: 0 10px 32px rgba(233,30,140,.45);
+    }
+    .btn-restart:active { transform: scale(.98); }
+
+    /* ── divider ── */
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+      border: none;
+      margin: 32px 0;
+    }
+
+    /* ── confetti burst (CSS only) ── */
+    .confetti-wrap {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .conf {
+      position: absolute;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      opacity: 0;
+    }
+    .conf.active {
+      animation: confFall linear forwards;
+    }
+    @keyframes confFall {
+      0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- floating sparkles background -->
+<div class="sparkles" id="sparkles"></div>
+
+<!-- confetti layer -->
+<div class="confetti-wrap" id="confetti"></div>
+
+<div class="card">
+
+  <div class="crown-row">👑 ✨ 👑</div>
+  <h1>Тест для Натули</h1>
+  <p class="subtitle">Учитель английского · Королева по жизни</p>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress" style="width:0%"></div>
+  </div>
+
+  <!-- Question 1 -->
+  <div class="question-block active" id="q1">
+    <div class="q-number">✦ Вопрос 1 из 3</div>
+    <div class="q-text">🎓 Ученик говорит: «I <em>goed</em> to school yesterday». Твоя реакция?</div>
+    <div class="options">
+      <button class="option" onclick="next(1)">
+        <span class="option-letter">А</span>
+        😶 Молча страдаю внутри
+      </button>
+      <button class="option" onclick="next(1)">
+        <span class="option-letter">Б</span>
+        😊👑 Исправляю с царской улыбкой
+      </button>
+      <button class="option" onclick="next(1)">
+        <span class="option-letter">В</span>
+        🙈 Делаю вид что не слышала
+      </button>
+      <button class="option" onclick="next(1)">
+        <span class="option-letter">Г</span>
+        🔁 Прошу повторить 47 раз
+      </button>
+    </div>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="question-block" id="q2">
+    <div class="q-number">✦ Вопрос 2 из 3</div>
+    <div class="q-text">🌙 Как ты проводишь идеальный вечер пятницы?</div>
+    <div class="options">
+      <button class="option" onclick="next(2)">
+        <span class="option-letter">А</span>
+        🍷 Ресторан
+      </button>
+      <button class="option" onclick="next(2)">
+        <span class="option-letter">Б</span>
+        💎 Ресторан подороже
+      </button>
+      <button class="option" onclick="next(2)">
+        <span class="option-letter">В</span>
+        🌅 Ресторан с видом на что-нибудь красивое
+      </button>
+      <button class="option" onclick="next(2)">
+        <span class="option-letter">Г</span>
+        🏠❓ Дома? Это где?
+      </button>
+    </div>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="question-block" id="q3">
+    <div class="q-number">✦ Вопрос 3 из 3</div>
+    <div class="q-text">🗺️ Переведи: <em>«Where are we on the map?»</em></div>
+    <div class="options">
+      <button class="option" onclick="showResult()">
+        <span class="option-letter">А</span>
+        😎 Легко, сейчас скажу!
+      </button>
+      <button class="option" onclick="showResult()">
+        <span class="option-letter">Б</span>
+        🤔 Примерно представляю…
+      </button>
+      <button class="option" onclick="showResult()">
+        <span class="option-letter">В</span>
+        🗺️❓ Карта? Какая карта?
+      </button>
+      <button class="option" onclick="showResult()">
+        <span class="option-letter">Г</span>
+        🚕 Для этого есть таксист
+      </button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="result">
+    <div class="result-emoji">👑</div>
+    <div class="result-title">Результат получен!</div>
+    <hr class="divider" />
+    <div class="result-badge">✨ ОФИЦИАЛЬНЫЙ ВЕРДИКТ ✨</div>
+    <p class="result-text">
+      Натуля, твой английский безупречен,<br>
+      ты само совершенство и королева 👑<br><br>
+      Просто прими это.
+    </p>
+    <button class="btn-restart" onclick="restart()">
+      🔄 Пройти ещё раз
+    </button>
+  </div>
+
+</div>
+
+<script>
+  /* ── floating sparkles ── */
+  const sparkleChr = ['✨','⭐','💫','🌟','✦','💛','💖','👑'];
+  const sparklesEl = document.getElementById('sparkles');
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('span');
+    s.className = 'sparkle';
+    s.textContent = sparkleChr[Math.floor(Math.random() * sparkleChr.length)];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDelay = Math.random() * 12 + 's';
+    s.style.animationDuration = (8 + Math.random() * 10) + 's';
+    s.style.fontSize = (.9 + Math.random() * 1.4) + 'rem';
+    sparklesEl.appendChild(s);
+  }
+
+  /* ── confetti ── */
+  const confColors = ['#e91e8c','#d4a017','#f8bbd0','#f5d76e','#c2185b','#fff8e1'];
+  const confWrap = document.getElementById('confetti');
+
+  function launchConfetti() {
+    confWrap.innerHTML = '';
+    for (let i = 0; i < 80; i++) {
+      const c = document.createElement('div');
+      c.className = 'conf';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = confColors[Math.floor(Math.random() * confColors.length)];
+      c.style.width = (6 + Math.random() * 8) + 'px';
+      c.style.height = (6 + Math.random() * 8) + 'px';
+      c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+      c.style.animationDelay = (Math.random() * .8) + 's';
+      c.style.animationDuration = (2 + Math.random() * 2) + 's';
+      confWrap.appendChild(c);
+      // trigger reflow so animation fires
+      void c.offsetWidth;
+      c.classList.add('active');
+    }
+  }
+
+  /* ── quiz logic ── */
+  const progress = document.getElementById('progress');
+
+  function next(currentQ) {
+    document.getElementById('q' + currentQ).classList.remove('active');
+    const nextQ = document.getElementById('q' + (currentQ + 1));
+    nextQ.classList.add('active');
+    progress.style.width = (currentQ / 3 * 100) + '%';
+  }
+
+  function showResult() {
+    document.getElementById('q3').classList.remove('active');
+    progress.style.width = '100%';
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    launchConfetti();
+    // second burst
+    setTimeout(launchConfetti, 1200);
+  }
+
+  function restart() {
+    ['q1','q2','q3'].forEach(id => document.getElementById(id).classList.remove('active'));
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('q1').classList.add('active');
+    progress.style.width = '0%';
+    confWrap.innerHTML = '';
+  }
+</script>
+</body>
+</html>
